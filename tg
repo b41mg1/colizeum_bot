@@ -1,0 +1,72 @@
+import telebot
+from telebot import types
+
+
+
+
+bot = telebot.TeleBot(TOKEN)
+
+@bot.message_handler(commands=['start'])
+def handle_text(message):
+    bot.send_message(message.chat.id,
+                     'Привет!Чтобы узнать всю необходимую информацию,используй данные команды: /info , /booking , /rules , /payment')
+
+@bot.message_handler(commands=['booking'])
+def handle_text(message):
+    bot.send_message(message.chat.id,
+                     'Чтобы забронировать место,позвоните по данному номеру( +7 (968) 759-59-46 ) или напишите в личные сообщения группы Вконтакте.')
+
+
+@bot.message_handler(commands=['rules'])
+def handle_text(message):
+    bot.send_message(message.chat.id,
+                     'В клубе необходимо наличие защитной маски.Так же,вы можете перекусить за специальным столиком для еды,но не за игровым местом.Нельзя громко кричать,бить аппаратуру и  вообще наносить какой либо ущерб клубу.')
+
+
+@bot.message_handler(commands=['payment'])
+def handle_text(message):
+    bot.send_message(message.chat.id,
+                     'Оплата на кассе возможна как наличными,так и безналично по терминалу(чаевые приветствуются ^_^).')
+
+
+@bot.message_handler(commands=['info'])
+def text(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+
+    item1 = types.KeyboardButton('💰Цены и тарифы')
+    item2 = types.KeyboardButton('🌌Адрес клуба')
+    item3 = types.KeyboardButton('🕒Время работы')
+    item4 = types.KeyboardButton('🕹Игры')
+    item5 = types.KeyboardButton('🍫🥤Еда и напитки')
+
+    markup.add(item1, item2, item3, item4, item5)
+
+    bot.send_message(message.chat.id,
+                     'Приветствую ,{0.first_name}! Данный телеграм бот это экспериментальная разработка для тех кто хочет посетить игровой клуб Colizeum и узнать всю необходимую информацию '.format(
+                         message.from_user), reply_markup=markup)
+
+
+@bot.message_handler(content_types=['text'])
+def bot_message(message):
+    if message.chat.type == 'private':
+        if message.text == '💰Цены и тарифы':
+            bot.send_photo(message.chat.id, 'https://wampi.ru/image/RU2jss4')
+            bot.send_message(message.chat.id, 'Цены в клубе"')
+
+        if message.text == '🌌Адрес клуба':
+            bot.send_message(message.chat.id,
+                             ' Г.Мытищи,Шараповский проезд  вл.2,стр.3, ТЦ Красный Кит,3 этаж.')
+            bot.send_photo(message.chat.id, 'https://wampi.ru/image/RU2JnZz')
+            bot.send_photo(message.chat.id, 'https://wampi.ru/image/RU2JeGw')
+
+        if message.text == '🕒Время работы':
+            bot.send_message(message.chat.id, 'Клуб работает круглосуточно,24/7 и всегда рад принять клиентов!')
+
+        if message.text == '🕹Игры':
+            bot.send_message(message.chat.id, 'Из основных игр на ПК стоят: DoTA,CS:GO,Apex Legends,Genshin Impact и PUBG.Но каждый клиент при желании может поставить свою игру из собственной коллекции.На PS4 в основном стоят:Mortal Combat 10,UFC 3,4, FIFA, PES,но присутствуют и другие игры.')
+
+        if message.text == '🍫🥤Еда и напитки':
+            bot.send_message(message.chat.id, 'У нас есть два холодильника с различными напитками и едой.Энергетики,газировка,обычная вода.Шоколадки,питательные батончики и много другого!')
+
+
+bot.polling(none_stop=True)
